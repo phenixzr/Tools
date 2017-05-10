@@ -1,0 +1,9 @@
+*.tlog
+*.obj
+*.exe
+*.ilk
+*.lastbuildstate
+*.pdb
+*.idb
+*.Build.CppClean.log
+*.log
