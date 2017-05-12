@@ -5,6 +5,7 @@
 #include "ConfigReader.h"
 #include "LuaBridgeWrapper.h"
 #include "ObjectPool.h"
+#include <SFML/Graphics.hpp>
 
 void dummyFunc(int a)
 {
@@ -84,26 +85,32 @@ int main(int argc, char** argv)
 	LOG_DEBUG("voici un nombre LUA %d", answer);
 
 	// test object pool
-	tools::ObjectPool<DummyClass>* dummyObjPool = new tools::ObjectPool<DummyClass>(2,10);
-
+	tools::ObjectPool<DummyClass>* dummyObjPool = new tools::ObjectPool<DummyClass>(2,5);
 	DummyClass* dobj = dummyObjPool->grab();
 	dummyObjPool->grab();
 	dummyObjPool->grab();
 	dummyObjPool->grab();
-	dummyObjPool->grab();
-	dummyObjPool->grab();
-	dummyObjPool->grab();
-	dummyObjPool->grab();
-	dummyObjPool->grab();
-
-	dummyObjPool->grab();
-	dummyObjPool->grab();
 	dummyObjPool->release(dobj);
 	dobj = dummyObjPool->grab();
-	dummyObjPool->grab();
-	dummyObjPool->grab();
 	delete dummyObjPool;
 
-	std::cin.get();
+	sf::RenderWindow window(sf::VideoMode(300, 300), "SFML test!");
+    sf::CircleShape shape(150.f);
+    shape.setFillColor(sf::Color::Green);
+
+	while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear();
+        window.draw(shape);
+        window.display();
+    }
+
     return bRet;
 }
