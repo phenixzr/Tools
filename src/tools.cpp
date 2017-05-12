@@ -1,9 +1,12 @@
 #include <iostream>
+#include <assert.h>
+
 #include "Logger.h"
 #include "ConfigReader.h"
 #include "LuaBridgeWrapper.h"
+#include "ObjectPool.h"
 
-void dummy(int a)
+void dummyFunc(int a)
 {
     switch (a)
     {
@@ -22,16 +25,26 @@ void dummy(int a)
     }
 }
 
+struct DummyClass
+{
+	DummyClass() { clear(); }
+	void clear() { _nbOpe = 0; _way = 'D'; _id.resize(0); }
+	~DummyClass(){std::cout<<"Dest called \n";}
+	int _nbOpe;
+	char _way;
+	std::string _id;
+};
+
 int main(int argc, char** argv)
 {
     int bRet = 0;
     tools::Logger::getInstance().init();
     theConfReader.init("Data/config.ini");
 
-    std::thread t1(dummy,1);
-    std::thread t2(dummy,2);
-    std::thread t3(dummy,3);
-    std::thread t4(dummy,4);
+    std::thread t1(dummyFunc,1);
+    std::thread t2(dummyFunc,2);
+    std::thread t3(dummyFunc,3);
+    std::thread t4(dummyFunc,4);
 
 	// test logger
     LOG_DEBUG("je logue depuis main !");
@@ -52,7 +65,6 @@ int main(int argc, char** argv)
     t1.join();t2.join();t3.join();t4.join();
 
     // test lua bridge
-
 	const char* file = "Data/script.lua"; 
 	const char* keyStr = "testString";
 	const char* keyNbr = "number";
@@ -71,5 +83,27 @@ int main(int argc, char** argv)
 	LOG_DEBUG("voici une string LUA %s", luaString.c_str());
 	LOG_DEBUG("voici un nombre LUA %d", answer);
 
+	// test object pool
+	tools::ObjectPool<DummyClass>* dummyObjPool = new tools::ObjectPool<DummyClass>(2,10);
+
+	DummyClass* dobj = dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->release(dobj);
+	dobj = dummyObjPool->grab();
+	dummyObjPool->grab();
+	dummyObjPool->grab();
+	delete dummyObjPool;
+
+	std::cin.get();
     return bRet;
 }
