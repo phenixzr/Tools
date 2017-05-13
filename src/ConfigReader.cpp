@@ -17,15 +17,20 @@ bool ConfigReader::init(const char* file)
         _configMap.clear();
 
         std::string line;
+		size_t pos;
         while( std::getline(confFile, line) )
         {
-            std::istringstream iss(line);
-            std::string key, value;
+			if( (pos=line.find("=")) != std::string::npos)
+			{
+				std::string key, value;
 
-            iss >> key;
-            iss >> value;
-            _configMap.insert(std::make_pair(key, value));
-            LOG_INFO("\tParameter %s : %s", key.c_str(), value.c_str());    
+				key = line.substr(0, pos);
+				value = line.substr(pos+1, line.length()-pos+1);
+
+				_configMap.insert(std::make_pair(key, value));
+				LOG_INFO("\tParameter %s : %s", key.c_str(), value.c_str());
+
+			}
         }
 
         bRet = true;
