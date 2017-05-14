@@ -1,6 +1,5 @@
 #include <fstream>
 #include <string>
-#include <sstream>
 #include "ConfigReader.h"
 #include "Logger.h"
 
