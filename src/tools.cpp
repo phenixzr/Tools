@@ -1,9 +1,7 @@
 #include <iostream>
-#include <assert.h>
 
 #include "Logger.h"
 #include "ConfigReader.h"
-#include "LuaBridgeWrapper.h"
 #include "ObjectPool.h"
 #include <SFML/Graphics.hpp>
 
@@ -73,28 +71,6 @@ int main(int argc, char** argv)
 
 	t1.join();t2.join();t3.join();t4.join();  
 #pragma endregion
-
-
-    // test lua bridge
-	const char* file1 = "Data/script1.lua"; 
-	const char* file2 = "Data/script2.lua"; 
-	const char* keyStr = "testString";
-	const char* keyInt = "n1";
-	const char* keyDouble = "d1";
-	const char* keyFloat = "f1";
-
-	std::cout <<"\n[LuaBridge TEST]\n"<<std::endl;
-	tools::LuaBridgeWrapper reader(file1);
-	std::cout << reader.getValue<std::string>(keyStr) <<std::endl;
-	std::cout << reader.getValue<float>(keyFloat) <<std::endl;
-	std::cout << reader.getValue<double>(keyDouble) <<std::endl;
-	std::cout << reader.getValue<int>(keyInt) <<std::endl;
-
-	reader.init(file2);
-	std::cout << reader.getValue<std::string>(keyStr) <<std::endl;
-	std::cout << reader.getValue<float>(keyFloat) <<std::endl;
-	std::cout << reader.getValue<double>(keyDouble) <<std::endl;
-	std::cout << reader.getValue<int>(keyInt) <<std::endl;
 
 #pragma region TEST_OBJPOOL
 	tools::ObjectPool<DummyClass>* dummyObjPool = new tools::ObjectPool<DummyClass>(2,5);

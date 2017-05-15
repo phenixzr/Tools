@@ -59,7 +59,7 @@ namespace tools
             va_start(args, msg);
                 printCurrentDate();
                 fprintf(_logFile, "[%s]  ", level);
-                fprintf(_logFile, "%-10x    ", std::this_thread::get_id().hash());
+                fprintf(_logFile, "%-10x    ", std::hash<std::thread::id>()(std::this_thread::get_id()));
                 vfprintf(_logFile, msg, args);
                 fprintf(_logFile, "\n");
             va_end(args);
