@@ -42,10 +42,10 @@ int main(int argc, char** argv)
     tools::Logger::getInstance().init();
     theConfReader.init("Data/config.ini");
 
-    std::thread t1(dummyFunc,1);
-    std::thread t2(dummyFunc,2);
-    std::thread t3(dummyFunc,3);
-    std::thread t4(dummyFunc,4);
+	std::thread t1(dummyFunc,1);
+	std::thread t2(dummyFunc,2);
+	std::thread t3(dummyFunc,3);
+	std::thread t4(dummyFunc,4);
 
 	// test logger
     LOG_DEBUG("je logue depuis main !");
