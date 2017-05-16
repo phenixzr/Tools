@@ -82,7 +82,7 @@ namespace tools
             gmtime_s(&t, &tt);
 
             int len = sprintf_s(dateFormat
-                    , "%04u-%02u-%02u %02u:%02u:%02u.%03u"
+                    , "%04u-%02u-%02u %02u:%02u:%02u.%I64u"
                     , t.tm_year + 1900
                     , t.tm_mon + 1
                     , t.tm_mday

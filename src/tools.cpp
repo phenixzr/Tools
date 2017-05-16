@@ -3,7 +3,10 @@
 #include "Logger.h"
 #include "ConfigReader.h"
 #include "ObjectPool.h"
+#include "Lua\selene.h"
 #include <SFML/Graphics.hpp>
+#include <tmxlite/Map.hpp>
+#include <tmxlite/SFMLOrthogonalLayer.hpp>
 
 void dummyFunc(int a)
 {
@@ -83,24 +86,46 @@ int main(int argc, char** argv)
 	delete dummyObjPool;  
 #pragma endregion
 
+#pragma region TEST_LUA
+	sel::State sel;
+	int lval1 = 12, lval2 = 4, res = 0;
+	sel.Load("Data/script1.lua");
+	res = sel["add"](lval1, lval2);
+	std::cout << "calling lua function : add " << lval1 << " + " << lval2 << " = " << res << std::endl;;
+	std::cout << "reading values from LUA " << static_cast<int>( sel["n1"] )<< std::endl;
+	std::cout << "reading values from LUA " << static_cast<double>( sel["d1"] ) << std::endl;
+	std::string lstr = sel["testString"];
+	std::cout << "reading values from LUA " << lstr << std::endl;
+    std::cout << "reading values from LUA " << static_cast<double>( sel["f1"] ) << std::endl;
+#pragma endregion
 
-	sf::RenderWindow window(sf::VideoMode(300, 300), "SFML test!");
-    sf::CircleShape shape(150.f);
-    shape.setFillColor(sf::Color::Green);
+#pragma region TEST_SFML
+	
+	tmx::Map map;
+	map.load("Data/dummy.tmx");
+	MapLayer layerZero(map, 0);
+	MapLayer layerOne(map, 1);	
+
+	sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML test!");
+	sf::CircleShape shape(150.f);
+	shape.setFillColor(sf::Color::Green);
 
 	while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
 
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
+		window.clear();
+		window.draw(layerZero);
+		window.draw(layerOne);
+		window.draw(shape);
+		window.display();
+	}
+#pragma endregion
 
     return bRet;
 }

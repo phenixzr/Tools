@@ -7,3 +7,4 @@
 *.txt
 *.VC.db
 /.vs/
+*.opendb

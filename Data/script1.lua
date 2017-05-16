@@ -3,6 +3,10 @@ n1 = 42
 d1 = 0.1234567
 f1 = 0.543
 
+function add(a, b)
+  return a + b
+end
+
 perso1 = {
 	fName= "Data/perso1.png",
 	rectAX = 0,

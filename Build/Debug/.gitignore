@@ -4,3 +4,5 @@
 *.log
 *.ilk
 *.exe
+*.lib
+*.exp
