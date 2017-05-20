@@ -1,0 +1,1 @@
+{"hello":"world","t":true,"f":false,"n":null,"i":123,"pi":3.1416,"textures":[{"file":"Data/perso.png","x":12,"y":23,"visible":true},{"file":"Data/arbre.png","x":11,"y":23,"visible":false}]}

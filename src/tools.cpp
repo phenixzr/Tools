@@ -3,10 +3,12 @@
 #include "Logger.h"
 #include "ConfigReader.h"
 #include "ObjectPool.h"
-#include "Lua\selene.h"
+#include <Lua\selene.h>
 #include <SFML/Graphics.hpp>
 #include <tmxlite/Map.hpp>
 #include <tmxlite/SFMLOrthogonalLayer.hpp>
+#include <rapidjson/document.h>
+#include <rapidjson/filestream.h>
 
 void dummyFunc(int a)
 {
@@ -98,6 +100,38 @@ int main(int argc, char** argv)
 	std::cout << "reading values from LUA " << lstr << std::endl;
     std::cout << "reading values from LUA " << static_cast<double>( sel["f1"] ) << std::endl;
 #pragma endregion
+
+	FILE* jsFile = NULL;
+	assert(fopen_s(&jsFile, "Data/file.json", "r") == 0);
+	rapidjson::FileStream isw(jsFile);
+	rapidjson::Document doc;
+		
+	if (!doc.ParseStream<0>(isw).HasParseError())
+	{
+		printf("\nAccess values in document:\n");
+		assert(doc.IsObject());
+		assert(doc.HasMember("hello"));
+		assert(doc["hello"].IsString());
+		printf("hello = %s\n", doc["hello"].GetString());
+
+		const rapidjson::Value& a = doc["textures"];
+		assert(a.IsArray());
+		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		{
+			const rapidjson::GenericValue <rapidjson::UTF8<>>& text = a[i];
+
+			printf("a[%d] = file = %s, {x=%d,y=%d}, visible=%d\n"
+				, i
+				, text["file"].GetString()
+				, text["x"].GetInt()
+				, text["y"].GetInt()
+				, text["visible"].GetBool());
+		}
+		fclose(jsFile);
+	}
+
+	
+	
 
 #pragma region TEST_SFML
 	
