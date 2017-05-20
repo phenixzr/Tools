@@ -7,4 +7,5 @@
 *.txt
 *.VC.db
 /.vs/
+Build/
 *.opendb
