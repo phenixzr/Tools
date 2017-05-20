@@ -112,7 +112,7 @@ private:
             vertColour.a = opacity;
 
             auto offset = layer.getOffset();
-            sf::Vector2f layerOffset(offset.x, offset.y);
+            sf::Vector2f layerOffset((float)offset.x, (float)offset.y);
 
             const auto& tileIDs = layer.getTiles();
             
@@ -145,18 +145,18 @@ private:
                                 chunkArrayCreated = true;
                             }
                             auto& ca = m_chunkArrays.back();
-                            sf::Vector2f tileOffset(x * tileSize.x, y * tileSize.y);
+                            sf::Vector2f tileOffset((float)(x * (size_t)tileSize.x), (float)(y * (size_t)tileSize.y));
                             
                             auto idIndex = tileIDs[idx].ID - ts->getFirstGID();
-                            sf::Vector2f tileIndex(idIndex % tsTileCount.x, idIndex / tsTileCount.x);
+                            sf::Vector2f tileIndex((float)(idIndex % tsTileCount.x), (float)(idIndex / tsTileCount.x));
                             tileIndex.x *= tileSize.x;
                             tileIndex.y *= tileSize.y;
                             Tile tile = 
                             {
                                 sf::Vertex(tileOffset, vertColour, tileIndex),
-                                sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, 0.f), vertColour, tileIndex + sf::Vector2f(tileSize.x, 0.f)),
-                                sf::Vertex(tileOffset + sf::Vector2f(tileSize.x, tileSize.y), vertColour, tileIndex + sf::Vector2f(tileSize.x, tileSize.y)),
-                                sf::Vertex(tileOffset + sf::Vector2f(0.f, tileSize.y), vertColour, tileIndex + sf::Vector2f(0.f, tileSize.y))
+                                sf::Vertex(tileOffset + sf::Vector2f((float)tileSize.x, 0.f), vertColour, tileIndex + sf::Vector2f((float)tileSize.x, 0.f)),
+                                sf::Vertex(tileOffset + sf::Vector2f((float)tileSize.x, (float)tileSize.y), vertColour, tileIndex + sf::Vector2f((float)tileSize.x, (float)tileSize.y)),
+                                sf::Vertex(tileOffset + sf::Vector2f(0.f,(float)tileSize.y), vertColour, tileIndex + sf::Vector2f(0.f, (float)tileSize.y))
                             };
                             ca->addTile(tile);
                         }
@@ -289,7 +289,7 @@ private:
         {
             for (auto x = posX; x < posX + 2; ++x)
             {
-                auto idx = y * int(m_chunkCount.x) + x;
+                auto idx =(size_t) (y * int(m_chunkCount.x) + x);
                 if (idx >= 0 && idx < m_chunks.size() && !m_chunks[idx]->empty())
                 {
                     visible.push_back(m_chunks[idx].get());
