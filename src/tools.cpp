@@ -3,12 +3,14 @@
 #include "Logger.h"
 #include "ConfigReader.h"
 #include "ObjectPool.h"
+#include "UuidGenerator.h"
 #include <Lua\selene.h>
 #include <SFML/Graphics.hpp>
 #include <tmxlite/Map.hpp>
 #include <tmxlite/SFMLOrthogonalLayer.hpp>
 #include <rapidjson/document.h>
 #include <rapidjson/filestream.h>
+#include <Thor/Animations.hpp>
 
 void dummyFunc(int a)
 {
@@ -101,11 +103,12 @@ int main(int argc, char** argv)
     std::cout << "reading values from LUA " << static_cast<double>( sel["f1"] ) << std::endl;
 #pragma endregion
 
+#pragma region JSON
 	FILE* jsFile = NULL;
 	assert(fopen_s(&jsFile, "Data/file.json", "r") == 0);
 	rapidjson::FileStream isw(jsFile);
 	rapidjson::Document doc;
-		
+
 	if (!doc.ParseStream<0>(isw).HasParseError())
 	{
 		printf("\nAccess values in document:\n");
@@ -129,9 +132,12 @@ int main(int argc, char** argv)
 		}
 		fclose(jsFile);
 	}
+#pragma endregion
 
-	
-	
+#pragma region RANDOM_GEN
+	for (int i = 0; i < 20; ++i)
+		std::cout << tools::UuidGenerator::getInstance().getUuid() << std::endl;
+#pragma endregion
 
 #pragma region TEST_SFML
 	
@@ -140,10 +146,10 @@ int main(int argc, char** argv)
 	MapLayer layerZero(map, 0);
 	MapLayer layerOne(map, 1);	
 
-	sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML test!");
-	sf::CircleShape shape(150.f);
-	shape.setFillColor(sf::Color::Green);
-
+	sf::RenderWindow window(sf::VideoMode((unsigned int)layerOne.getGlobalBounds().width,
+		                                  (unsigned int)layerOne.getGlobalBounds().height),
+		                                  "SFML test!");
+	
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -156,9 +162,9 @@ int main(int argc, char** argv)
 		window.clear();
 		window.draw(layerZero);
 		window.draw(layerOne);
-		window.draw(shape);
 		window.display();
 	}
+
 #pragma endregion
 
     return bRet;
